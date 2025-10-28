@@ -101,7 +101,7 @@ const SideBar = () => {
             </h2>
             <button
               onClick={() => {
-                if (confirm('Yakin ingin keluar dari akun?')) logout();
+                if (confirm('Yakin ingin keluar dari akun ?')) logout();
               }}
               className='btn btn-error'
             >
