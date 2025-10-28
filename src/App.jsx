@@ -8,11 +8,13 @@ import TransactionsPage from './pages/TransactionsPage';
 import CustomersPage from './pages/CustomersPage';
 import ExpensesPage from './pages/ExpensesPage';
 import ReportsPage from './pages/ReportsPage';
+import HomePage from './pages/HomePage';
 
 function App() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/" element={<HomePage />} />
 
       <Route
         path="/dashboard"
