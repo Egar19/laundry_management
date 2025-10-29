@@ -13,7 +13,7 @@ import HomePage from './pages/HomePage';
 function App() {
   return (
     <Routes>
-      <Route path="/login" element={<div className='mx-5'><LoginPage /></div>} />
+      <Route path="/login" element={<LoginPage />} />
       <Route path="/" element={<HomePage />} />
 
       <Route
