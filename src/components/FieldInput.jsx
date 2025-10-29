@@ -2,7 +2,7 @@ import Input from './Input';
 
 const FieldInput = ({ fieldLabel, inputs = [], btnText, register, errors, btnLoading }) => {
   return (
-    <fieldset className='fieldset bg-base-200 border-base-300 rounded-box w-md border p-4'>
+    <fieldset className='fieldset bg-base-200 border-base-300 rounded-box w-sm mx-8 p-4'>
       <legend className='fieldset-legend text-2xl'>{fieldLabel}</legend>
 
       {inputs.map((input, index) => (
