@@ -3,11 +3,15 @@ import logo from '../assets/logo.png';
 import { useCurrentUser } from '../hooks/auth/useGetCurrentUser';
 import Loading from './Loading';
 import { useLogOut } from '../hooks/auth/useLogOut';
+import AlertConfirm from './AlertConfirm';
+import { useState } from 'react';
 
 const SideBar = () => {
   const { data: user, isLoading, error } = useCurrentUser();
   const { mutate: logout, isPending } = useLogOut();
 
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
+  
   if (error) return console.log(error.message);
   if (isPending) return <Loading />;
 
@@ -17,11 +21,24 @@ const SideBar = () => {
     localStorage.setItem('theme', selectedTheme);
   };
 
+  const handleLogOut = () => {
+    logout();
+    setIsAlertOpen(false)
+  };
+
   const savedTheme = localStorage.getItem('theme') || 'dark';
   document.documentElement.setAttribute('data-theme', savedTheme);
 
   return (
     <div className='drawer-side'>
+      <AlertConfirm 
+        isOpen={isAlertOpen}
+        title={'Yakin ingin keluar dari sistem?'}
+        confirmText='Ya'
+        cancelText='Tidak'
+        onConfirm={handleLogOut}
+        onCancel={() => setIsAlertOpen(false)}
+      />
       <label htmlFor='my-drawer' className='drawer-overlay'></label>
 
       <div className='flex flex-col bg-base-200 min-h-screen w-64 p-4'>
@@ -95,27 +112,29 @@ const SideBar = () => {
         </ul>
 
         <div className='mt-auto pt-4 border-t border-base-300'>
-          <div className='flex justify-between'>
-            <h2 className='font-bold text-secondary text-xl'>
+          <div
+            tabIndex={0}
+            className='collapse collapse-arrow bg-base-100 border-base-300'
+          >
+            <div className='collapse-title font-semibold text-secondary'>
               {isLoading ? <Loading /> : user.nama}
-            </h2>
-            <button
-              onClick={() => {
-                if (confirm('Yakin ingin keluar dari akun ?')) logout();
-              }}
-              className='btn btn-error'
-            >
-              Keluar
-            </button>
+            </div>
+            <div className='collapse-content text-sm'>
+              <button
+                onClick={() => {setIsAlertOpen(true)}}
+                className='btn btn-error'
+              >
+                Keluar
+              </button>
+            </div>
           </div>
-          <label className='label-text font-semibold'>Ganti Tema</label>
           <select
             className='select select-bordered w-full mt-2'
             defaultValue={savedTheme}
             onChange={handleThemeChange}
           >
-            <option value='light'>Terang</option>
-            <option value='dark'>Gelap</option>
+            <option value='light'>Tema: Terang</option>
+            <option value='dark'>Tema: Gelap</option>
           </select>
         </div>
       </div>

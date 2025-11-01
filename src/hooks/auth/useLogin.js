@@ -7,9 +7,8 @@ export const useLogin = () => {
 
   return useMutation({
     mutationFn: loginUser,
-    onSuccess: (data) => {
-      console.log('login berhasil', data);
-      navigate('/dashboard')
+    onSuccess: () => {
+      navigate('/dashboard', { replace: true });
     },
 
     onError: (error) => {

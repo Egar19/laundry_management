@@ -56,7 +56,7 @@ const LoginPage = () => {
           ]}
         />
         {isError && (
-          <Toast message={error.message} variant='error' />
+          <Toast message={error.message} variant='error' duration={5000} onClose={() => {}} />
         )}
       </form>
     </div>
