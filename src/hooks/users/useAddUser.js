@@ -9,7 +9,6 @@ export const useAddUser = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(['users']);
       console.log('berhasil menambahkan user');
-      
     },
   });
 };

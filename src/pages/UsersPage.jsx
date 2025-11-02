@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import Loading from '../components/Loading';
 import Toast from '../components/Toast';
-import { useGetAllUsers } from '../hooks/users/useGetAllUsers';
-import { useToggleDeactivateUser } from '../hooks/users/useToggleDeactivateUser';
 import AlertConfirm from '../components/AlertConfirm';
 import Modal from '../components/Modal';
+import Input from '../components/Input';
+import { useForm } from 'react-hook-form';
+import { useGetAllUsers } from '../hooks/users/useGetAllUsers';
+import { useToggleDeactivateUser } from '../hooks/users/useToggleDeactivateUser';
 import { useUpdateUser } from '../hooks/users/useUpdateUser';
 import { useAddUser } from '../hooks/users/useAddUser';
-import { useForm } from 'react-hook-form';
-import Input from '../components/Input';
 
 const UsersPage = () => {
   const {
@@ -17,23 +17,15 @@ const UsersPage = () => {
     isLoading: usersIsLoading,
   } = useGetAllUsers();
 
-  const {
-    mutate: addUser,
-    isPending: addUserIsPending,
-    error: addUserError,
-  } = useAddUser();
-  const {
-    mutate: updateUser,
-    isPending: updateUserPending,
-    error: updateUserError,
-  } = useUpdateUser();
-  const { mutate: toggleUser, isPending: toggleIsPending } =
-    useToggleDeactivateUser();
+  const { mutateAsync: addUser, isPending: addUserPending } = useAddUser();
+  const { mutateAsync: updateUser, isPending: updateUserPending } = useUpdateUser();
+  const { mutate: toggleUser, isPending: toggleIsPending } = useToggleDeactivateUser();
 
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedToggleUser, setSelectedToggleUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState('add');
+  const [showToast, setShowToast] = useState(null);
 
   const {
     register,
@@ -45,11 +37,7 @@ const UsersPage = () => {
   const handleAddOpenModal = () => {
     setModalType('add');
     setSelectedUser(null);
-    reset({
-      nama: '',
-      email: '',
-      peran: '',
-    });
+    reset({ nama: '', email: '', peran: '', password: '' });
     setIsModalOpen(true);
   };
 
@@ -65,11 +53,9 @@ const UsersPage = () => {
     setIsModalOpen(true);
   };
 
-  const handleClose = () => setIsModalOpen(false);
+  const handleCloseModal = () => setIsModalOpen(false);
 
-  const handleToggle = (user) => {
-    setSelectedToggleUser(user);
-  };
+  const handleToggle = (user) => setSelectedToggleUser(user);
 
   const confirmToggle = () => {
     if (!selectedToggleUser) return;
@@ -77,41 +63,64 @@ const UsersPage = () => {
     setSelectedToggleUser(null);
   };
 
-  const onAddSubmit = async (data) => {
-    await addUser(data);
-    setIsModalOpen(false);
+  const onAddSubmit = async (data, e) => {
+    e.preventDefault();
+    try {
+      await addUser(data);
+      setIsModalOpen(false);
+      reset();
+      setShowToast({
+        message: 'Pengguna berhasil ditambahkan',
+        variant: 'success',
+      });
+    } catch (err) {
+      setShowToast({
+        message: err.message || 'Gagal menambahkan pengguna',
+        variant: 'error',
+      });
+    }
   };
 
-  const onEditSubmit = async (data) => {
-    await updateUser({
-      id_pengguna: selectedUser.id_pengguna,
-      nama: data.nama,
-      peran: data.peran,
-    });
-    setIsModalOpen(false);
-    console.log('edited:', selectedUser.id_pengguna, data);
+  const onEditSubmit = async (data, e) => {
+    e.preventDefault();
+    try {
+      await updateUser({
+        id_pengguna: selectedUser.id_pengguna,
+        nama: data.nama,
+        peran: data.peran,
+      });
+      setIsModalOpen(false);
+      setShowToast({
+        message: 'Data pengguna berhasil diperbarui',
+        variant: 'success',
+      });
+    } catch (error) {
+      setShowToast({
+        message: error.message || 'Gagal memperbarui pengguna',
+        variant: 'error',
+      });
+    }
   };
 
-  const isSubmitting = addUserIsPending || updateUserPending;
+  const isSubmitting = addUserPending || updateUserPending;
 
   return (
-    <div className='overflow-x-auto'>
+    <div className="overflow-x-auto">
       {usersError && (
-        <Toast message={usersError.message} variant='error' duration={5000} />
+        <Toast message={usersError.message} variant="error" duration={5000} />
       )}
-      {addUserError && (
-        <Toast message={addUserError.message} variant='error' duration={5000} />
-      )}
-      {updateUserError && (
+
+      {showToast && (
         <Toast
-          message={updateUserError.message}
-          variant='error'
-          duration={5000}
+          message={showToast.message}
+          variant={showToast.variant}
+          duration={4000}
+          onClose={() => setShowToast(null)}
         />
       )}
 
       {usersIsLoading && <Loading />}
-      
+
       <AlertConfirm
         isOpen={!!selectedToggleUser}
         title={`Apakah Anda yakin ingin ${
@@ -124,7 +133,7 @@ const UsersPage = () => {
 
       <Modal
         isOpen={isModalOpen}
-        onClose={handleClose}
+        onClose={handleCloseModal}
         confirmText={isSubmitting ? 'Menyimpan...' : 'Simpan'}
         onConfirm={handleSubmit(
           modalType === 'add' ? onAddSubmit : onEditSubmit
@@ -132,20 +141,20 @@ const UsersPage = () => {
         title={modalType === 'add' ? 'Tambah Pengguna Baru' : 'Edit Pengguna'}
         disabled={isSubmitting}
       >
-        <form className='flex flex-col gap-3'>
+        <form className="flex flex-col gap-3" onSubmit={handleSubmit(modalType === 'add' ? onAddSubmit : onEditSubmit)}>
           <Input
-            label='Nama'
-            type='text'
-            placeholder='Masukkan nama pengguna'
+            label="Nama"
+            type="text"
+            placeholder="Masukkan nama pengguna"
             register={register('nama', { required: 'Nama wajib diisi' })}
             error={errors.nama}
           />
 
           {modalType === 'add' && (
             <Input
-              label='Email'
-              type='email'
-              placeholder='Masukkan email pengguna'
+              label="Email"
+              type="email"
+              placeholder="Masukkan email pengguna"
               register={register('email', {
                 required: 'Email wajib diisi',
                 pattern: {
@@ -159,9 +168,9 @@ const UsersPage = () => {
 
           {modalType === 'add' && (
             <Input
-              label='Password'
-              type='password'
-              placeholder='Masukkan password'
+              label="Password"
+              type="password"
+              placeholder="Masukkan password"
               register={register('password', {
                 required: 'Password wajib diisi',
                 minLength: {
@@ -174,28 +183,29 @@ const UsersPage = () => {
           )}
 
           <div>
-            <label className='label'>Peran</label>
+            <label className="label">Peran</label>
             <select
-              className='select w-full'
+              className="select w-full"
               {...register('peran', { required: 'Peran wajib dipilih' })}
             >
-              <option value='pegawai'>Pegawai</option>
-              <option value='admin'>Admin</option>
+              <option value="">Pilih peran...</option>
+              <option value="pegawai">Pegawai</option>
+              <option value="admin">Admin</option>
             </select>
             {errors.peran && (
-              <p className='text-error text-sm mt-1'>{errors.peran.message}</p>
+              <p className="text-error text-sm mt-1">{errors.peran.message}</p>
             )}
           </div>
         </form>
       </Modal>
 
-      <div className='my-4'>
-        <button onClick={handleAddOpenModal} className='btn btn-success'>
+      <div className="my-4">
+        <button onClick={handleAddOpenModal} className="btn btn-success">
           + Tambah Pengguna Baru
         </button>
       </div>
 
-      <table className='table w-full'>
+      <table className="table w-full">
         <thead>
           <tr>
             <th>Nama</th>
@@ -220,10 +230,10 @@ const UsersPage = () => {
                   {user.aktif ? 'Aktif' : 'Tidak Aktif'}
                 </span>
               </td>
-              <td className='flex gap-2'>
+              <td className="flex gap-2">
                 <button
                   onClick={() => handleEditOpenModal(user)}
-                  className='btn btn-sm btn-warning'
+                  className="btn btn-sm btn-warning"
                 >
                   Edit
                 </button>
