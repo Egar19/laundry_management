@@ -145,7 +145,7 @@ const CustomersPage = () => {
   });
 
   return (
-    <div className='overflow-x-auto p-4'>
+    <div className='p-4'>
       {customerIsLoading && <Loading />}
 
       {showToast && (
@@ -221,49 +221,51 @@ const CustomersPage = () => {
         />
       </div>
 
-      <table className='table w-full'>
-        <thead>
-          <tr>
-            <th>Nama</th>
-            <th>Alamat</th>
-            <th>Telepon/WA</th>
-            <th>Tanggal Dibuat</th>
-            <th>Aksi</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredCustomers.length === 0 ? (
+      <div className='overflow-x-auto'>
+        <table className='table w-full'>
+          <thead>
             <tr>
-              <td colSpan={5} className='text-center opacity-30'>
-                Tidak ada pelanggan
-              </td>
+              <th>Nama</th>
+              <th>Alamat</th>
+              <th>Telepon/WA</th>
+              <th>Tanggal Dibuat</th>
+              <th>Aksi</th>
             </tr>
-          ) : (
-            filteredCustomers.map((customer) => (
-              <tr key={customer.id_pelanggan}>
-                <td>{customer.nama_pelanggan}</td>
-                <td>{customer.alamat}</td>
-                <td>{customer.no_telp}</td>
-                <td>{formatTanggal(customer.tanggal_dibuat)}</td>
-                <td className='flex gap-2'>
-                  <button
-                    onClick={() => handleEditOpenModal(customer)}
-                    className='btn btn-sm btn-warning'
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDeleteAlert(customer)}
-                    className='btn btn-sm btn-error'
-                  >
-                    Hapus
-                  </button>
+          </thead>
+          <tbody>
+            {filteredCustomers.length === 0 ? (
+              <tr>
+                <td colSpan={5} className='text-center opacity-30'>
+                  Tidak ada pelanggan
                 </td>
               </tr>
-            ))
-          )}
-        </tbody>
-      </table>
+            ) : (
+              filteredCustomers.map((customer) => (
+                <tr key={customer.id_pelanggan}>
+                  <td>{customer.nama_pelanggan}</td>
+                  <td>{customer.alamat}</td>
+                  <td>{customer.no_telp}</td>
+                  <td>{formatTanggal(customer.tanggal_dibuat)}</td>
+                  <td className='flex gap-2'>
+                    <button
+                      onClick={() => handleEditOpenModal(customer)}
+                      className='btn btn-sm btn-warning'
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteAlert(customer)}
+                      className='btn btn-sm btn-error'
+                    >
+                      Hapus
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
 
       <Pagination
         page={page}
