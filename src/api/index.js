@@ -182,14 +182,15 @@ const getAllCustomer = async ({ page = 1, limit = 5, search = '' }) => {
   let query = supabase
     .from('pelanggan')
     .select('*', { count: 'exact' })
-    .order('tanggal_dibuat', { ascending: false })
-    .range(from, to);
+    .order('tanggal_dibuat', { ascending: false });
 
   if (search) {
     query = query.or(
       `nama_pelanggan.ilike.%${search}%,alamat.ilike.%${search}%,no_telp.ilike.%${search}%`
     );
   }
+
+  query = query.range(from, to);
 
   const { data, error, count } = await query;
 

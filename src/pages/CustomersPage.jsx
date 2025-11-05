@@ -4,7 +4,7 @@ import Toast from '../components/Toast';
 import { dateFormat } from '../utils/dateFormat';
 import { useAddCustomer } from '../hooks/customers/useAddCustomer';
 import { useAuthUser } from '../hooks/auth/useAuthUser';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import Modal from '../components/Modal';
 import Input from '../components/Input';
@@ -24,12 +24,12 @@ const CustomersPage = () => {
   const [page, setPage] = useState(1);
   const limit = 5;
 
-  const { data: customerResponse, isLoading: customerIsLoading } =
-    useGetAllCustomer(page, limit);
+  useEffect(() => {
+    setPage(1);
+  }, [searchTerm]);
 
-  const customers = customerResponse?.data || [];
-  const totalCustomers = customerResponse?.count || 0;
-  const totalPages = Math.ceil(totalCustomers / limit);
+  const { data: customerResponse, isLoading: customerIsLoading } =
+    useGetAllCustomer({page, limit, search: searchTerm});
 
   const { mutate: addCustomer, isPending: addCustomerIsPending } =
     useAddCustomer();
@@ -41,6 +41,10 @@ const CustomersPage = () => {
     useDeleteCustomer();
 
   const { data: authUser } = useAuthUser();
+
+  const customers = customerResponse?.data || [];
+  const totalCustomers = customerResponse?.count || 0;
+  const totalPages = Math.ceil(totalCustomers / limit);
 
   const {
     register,
@@ -135,14 +139,7 @@ const CustomersPage = () => {
     }
   };
 
-  const filteredCustomers = customers.filter((customer) => {
-    const term = searchTerm.toLowerCase();
-    return (
-      customer.nama_pelanggan.toLowerCase().includes(term) ||
-      customer.no_telp.toLowerCase().includes(term) ||
-      customer.alamat.toLowerCase().includes(term)
-    );
-  });
+  const filteredCustomers = customers
 
   return (
     <div className='p-4'>
