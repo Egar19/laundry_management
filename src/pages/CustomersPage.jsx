@@ -211,7 +211,7 @@ const CustomersPage = () => {
         </form>
       </Modal>
 
-      <div className='my-4 flex justify-between items-center'>
+      <div className='my-4 flex justify-between items-center gap-2'>
         <button onClick={handleAddOpenModal} className='btn btn-success'>
           + Tambah Data Pelanggan
         </button>
