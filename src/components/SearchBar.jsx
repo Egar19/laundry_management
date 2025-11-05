@@ -10,12 +10,12 @@ const SearchBar = ({ onSearch, placeholder = 'Cari...' }) => {
   };
 
   return (
-    <div className="form-control max-w-md">
+    <div className="form-control ">
       <div className="input-group">
         <input
-          type="text"
+          type="search"
           placeholder={placeholder}
-          className="input input-bordered input-sm w-full"
+          className="input input-bordered input-md w-full"
           value={query}
           onChange={handleChange}
         />
