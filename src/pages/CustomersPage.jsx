@@ -1,7 +1,7 @@
 import { useGetAllCustomer } from '../hooks/customers/useGetAllCustomer';
 import Loading from '../components/Loading';
 import Toast from '../components/Toast';
-import { formatTanggal } from '../utils/formatTanggal';
+import { dateFormat } from '../utils/dateFormat';
 import { useAddCustomer } from '../hooks/customers/useAddCustomer';
 import { useAuthUser } from '../hooks/auth/useAuthUser';
 import { useState } from 'react';
@@ -245,7 +245,7 @@ const CustomersPage = () => {
                   <td>{customer.nama_pelanggan}</td>
                   <td>{customer.alamat}</td>
                   <td>{customer.no_telp}</td>
-                  <td>{formatTanggal(customer.tanggal_dibuat)}</td>
+                  <td>{dateFormat(customer.tanggal_dibuat)}</td>
                   <td className='flex gap-2'>
                     <button
                       onClick={() => handleEditOpenModal(customer)}
