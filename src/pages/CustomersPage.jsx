@@ -29,7 +29,7 @@ const CustomersPage = () => {
   }, [searchTerm]);
 
   const { data: customerResponse, isLoading: customerIsLoading } =
-    useGetAllCustomer({page, limit, search: searchTerm});
+    useGetAllCustomer({ page, limit, search: searchTerm });
 
   const { mutate: addCustomer, isPending: addCustomerIsPending } =
     useAddCustomer();
@@ -139,12 +139,10 @@ const CustomersPage = () => {
     }
   };
 
-  const filteredCustomers = customers
+  const filteredCustomers = customers;
 
   return (
     <div className='p-4'>
-      {customerIsLoading && <Loading />}
-
       {showToast && (
         <Toast
           message={showToast.message}
@@ -230,6 +228,11 @@ const CustomersPage = () => {
             </tr>
           </thead>
           <tbody>
+            {customerIsLoading && (
+              <td colSpan={5} className='text-center opacity-30'>
+                <Loading />
+              </td>
+            )}
             {filteredCustomers.length === 0 ? (
               <tr>
                 <td colSpan={5} className='text-center opacity-30'>
