@@ -1,15 +1,15 @@
 import { useGetAllCustomer } from '../hooks/customers/useGetAllCustomer';
-import Loading from '../components/Loading';
-import Toast from '../components/Toast';
-import { dateFormat } from '../utils/dateFormat';
 import { useAddCustomer } from '../hooks/customers/useAddCustomer';
-import { useAuthUser } from '../hooks/auth/useAuthUser';
-import { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import Modal from '../components/Modal';
-import Input from '../components/Input';
 import { useUpdateCustomer } from '../hooks/customers/useUpdateCustomer';
 import { useDeleteCustomer } from '../hooks/customers/useDeleteCustomer';
+import { useAuthUser } from '../hooks/auth/useAuthUser';
+import { dateFormat } from '../utils/dateFormat';
+import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import Loading from '../components/Loading';
+import Toast from '../components/Toast';
+import Modal from '../components/Modal';
+import Input from '../components/Input';
 import AlertConfirm from '../components/AlertConfirm';
 import SearchBar from '../components/SearchBar';
 import Pagination from '../components/Pagination';
@@ -139,8 +139,6 @@ const CustomersPage = () => {
     }
   };
 
-  const filteredCustomers = customers;
-
   return (
     <div className='p-4'>
       {showToast && (
@@ -229,18 +227,20 @@ const CustomersPage = () => {
           </thead>
           <tbody>
             {customerIsLoading && (
-              <td colSpan={5} className='text-center opacity-30'>
-                <Loading />
-              </td>
+              <tr>
+                <td colSpan={5} className='text-center opacity-30'>
+                  <Loading />
+                </td>
+              </tr>
             )}
-            {filteredCustomers.length === 0 ? (
+            {customers.length === 0 ? (
               <tr>
                 <td colSpan={5} className='text-center opacity-30'>
                   Tidak ada pelanggan
                 </td>
               </tr>
             ) : (
-              filteredCustomers.map((customer) => (
+              customers.map((customer) => (
                 <tr key={customer.id_pelanggan}>
                   <td>{customer.nama_pelanggan}</td>
                   <td>{customer.alamat}</td>

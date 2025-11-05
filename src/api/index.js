@@ -234,7 +234,7 @@ const updateCustomer = async ({
   return data;
 };
 
-const deleteCustomer = async ( id_pelanggan ) => {
+const deleteCustomer = async (id_pelanggan) => {
   const { error } = await supabase
     .from('pelanggan')
     .delete()
@@ -245,6 +245,62 @@ const deleteCustomer = async ( id_pelanggan ) => {
   return { success: true };
 };
 // PELANGGAN END
+
+//PENGELUARAN START
+const getAllExpense = async ({ page = 1, limit = 5, search = '' }) => {
+  const start = (page - 1) * limit;
+  const end = start + limit - 1;
+
+  let query = supabase
+    .from('pengeluaran')
+    .select('*', { count: 'exact' })
+    .order('tanggal_dibuat', { ascending: false })
+    .range(start, end);
+
+  if (search) {
+    query = query.or(`deskripsi.ilike.%${search}%`);
+  }
+
+  const { data, count, error } = await query;
+
+  if (error) throw error;
+
+  return { data, count };
+};
+
+
+const addExpense = async ({ id_pengguna, deskripsi, biaya }) => {
+  const { data, error } = await supabase
+    .from('pengeluaran')
+    .insert([{ id_pengguna, deskripsi, biaya }])
+    .select();
+
+  if (error) throw error;
+
+  return data;
+};
+
+const updateExpense = async ({ id_pengeluaran, deskripsi, biaya }) => {
+  const { data, error } = await supabase
+    .from('pengeluaran')
+    .update({ deskripsi, biaya })
+    .eq('id_pengeluaran', id_pengeluaran)
+    .select();
+
+  if (error) throw error;
+
+  return data;
+};
+
+const deleteExpense = async (id_pengeluaran) => {
+  const { error } = await supabase
+    .from('pengeluaran')
+    .delete()
+    .eq('id_pengeluaran', id_pengeluaran);
+
+  if (error) throw error;
+}
+//PENGELUARAN END
 
 export {
   getAllUsers,
@@ -259,4 +315,8 @@ export {
   addCustomer,
   updateCustomer,
   deleteCustomer,
+  getAllExpense,
+  addExpense,
+  updateExpense,
+  deleteExpense,
 };

@@ -1,14 +1,14 @@
+import { useGetAllUsers } from '../hooks/users/useGetAllUsers';
+import { useToggleDeactivateUser } from '../hooks/users/useToggleDeactivateUser';
+import { useUpdateUser } from '../hooks/users/useUpdateUser';
+import { useAddUser } from '../hooks/users/useAddUser';
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import Loading from '../components/Loading';
 import Toast from '../components/Toast';
 import AlertConfirm from '../components/AlertConfirm';
 import Modal from '../components/Modal';
 import Input from '../components/Input';
-import { useForm } from 'react-hook-form';
-import { useGetAllUsers } from '../hooks/users/useGetAllUsers';
-import { useToggleDeactivateUser } from '../hooks/users/useToggleDeactivateUser';
-import { useUpdateUser } from '../hooks/users/useUpdateUser';
-import { useAddUser } from '../hooks/users/useAddUser';
 
 const UsersPage = () => {
   const {
