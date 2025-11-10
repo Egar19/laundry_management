@@ -6,7 +6,7 @@ const getAllUsers = async () => {
     .from('pengguna')
     .select('id_pengguna, nama, email, aktif, peran');
 
-  if (error) throw new Error(error.message);
+  if (error) throw error;
   return data;
 };
 
@@ -68,7 +68,7 @@ const updateUser = async (id_pengguna, { nama, peran }) => {
     .select()
     .single();
 
-  if (error) throw new Error('Gagal mengubah data pegguna');
+  if (error) throw error;
 
   return data;
 };
@@ -89,7 +89,7 @@ const toggleDeactivateUser = async (id_pengguna) => {
     .select()
     .single();
 
-  if (error) throw new Error('Gagal memperbarui status pengguna.');
+  if (error) throw error;
 
   return data;
 };
@@ -244,6 +244,16 @@ const deleteCustomer = async (id_pelanggan) => {
 
   return { success: true };
 };
+
+const getCustomerCount = async () => {
+  const { count, error } = await supabase
+    .from('pelanggan')
+    .select('*', { count: 'exact', head: true });
+
+  if (error) throw error;
+
+  return count;
+};
 // PELANGGAN END
 
 //PENGELUARAN START
@@ -267,7 +277,6 @@ const getAllExpense = async ({ page = 1, limit = 5, search = '' }) => {
 
   return { data, count };
 };
-
 
 const addExpense = async ({ id_pengguna, deskripsi, biaya }) => {
   const { data, error } = await supabase
@@ -299,8 +308,62 @@ const deleteExpense = async (id_pengeluaran) => {
     .eq('id_pengeluaran', id_pengeluaran);
 
   if (error) throw error;
-}
+};
 //PENGELUARAN END
+
+//TRANSAKSI START
+const getAllTransaction = async () => {
+  const { data, error } = await supabase.from('transaksi').select('*');
+
+  if (error) throw error;
+  return data;
+};
+
+// TRANSAKSI END
+
+//JENIS PAKET START
+const getAllPackages = async () => {
+  const { data, error } = await supabase
+    .from('jenis_paket')
+    .select('*')
+    .order('tanggal_dibuat', { ascending: false });
+
+  if (error) throw error;
+  return data;
+};
+
+const addPackage = async ({ id_pengguna, nama_paket, estimasi, harga_per_kg }) => {
+  const { data, error } = await supabase
+    .from('jenis_paket')
+    .insert([{ id_pengguna, nama_paket, estimasi, harga_per_kg }])
+    .select();
+
+  if (error) throw error;
+  return data;
+};
+
+const updatePackage = async ({ id_jenis_paket, nama_paket, estimasi, harga_per_kg }) => {
+  const { data, error } = await supabase
+    .from('jenis_paket')
+    .update({ nama_paket, estimasi, harga_per_kg })
+    .eq('id_jenis_paket', id_jenis_paket)
+    .select();
+
+  if (error) throw error;
+  return data;
+};
+
+const deletePackage = async (id_jenis_paket) => {
+  const { error } = await supabase
+    .from('jenis_paket')
+    .delete()
+    .eq('id_jenis_paket', id_jenis_paket);
+
+  if (error) throw error;
+};
+
+
+//JENIS PAKET END
 
 export {
   getAllUsers,
@@ -315,8 +378,14 @@ export {
   addCustomer,
   updateCustomer,
   deleteCustomer,
+  getCustomerCount,
   getAllExpense,
   addExpense,
   updateExpense,
   deleteExpense,
+  getAllTransaction,
+  getAllPackages,
+  addPackage,
+  updatePackage,
+  deletePackage,
 };

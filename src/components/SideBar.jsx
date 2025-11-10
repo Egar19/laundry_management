@@ -97,6 +97,16 @@ const SideBar = () => {
               Laporan
             </NavLink>
           </li>
+          <li>
+            <NavLink
+              to='/package_settings'
+              className={({ isActive }) =>
+                isActive ? 'text-primary font-bold' : ''
+              }
+            >
+              Pengaturan paket
+            </NavLink>
+          </li>
           {user?.peran === 'admin' && (
             <li>
               <NavLink

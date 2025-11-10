@@ -12,6 +12,7 @@ const MainLayout = ({ children }) => {
     '/expenses': 'Pengeluaran',
     '/reports': 'Laporan',
     '/users': 'List pengguna',
+    '/package_settings': 'Pengaturan',
   };
 
   const currentTitle = pageTitles[location.pathname];

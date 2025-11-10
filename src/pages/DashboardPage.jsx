@@ -1,39 +1,23 @@
-import StatWrapper from '../components/StatWrapper';
+import Stat from '../components/Stat';
+import { useCustomerCount } from '../hooks/customers/useCustomerCount';
+import Loading from '../components/Loading';
 
 const DashboardPage = () => {
-  const statsCucian = [
-    {
-      title: 'Total Cucian',
-      value: 10,
-      btnText: 'Lihat',
-      link: '/transactions'
-    },
-    {
-      title: 'Cucian Sedang Berlangsung',
-      value: 10,
-      btnText: 'Lihat',
-      link: '/transactions'
-    },
-    {
-      title: 'Cucian Selesai',
-      value: 15,
-      btnText: 'Lihat',
-      link: '/transactions'
-    },
-  ];
-  const statsCustomer = [
-    {
-      title: 'Total pelanggan',
-      value: 10,
-      btnText: 'Lihat',
-      link: '/customers'
-    },
-  ];
 
+  const { data: totalCustomer, isLoading } = useCustomerCount();
+  
   return (
     <div className='flex flex-col gap-4'>
-      <StatWrapper statTitle="Cucian" stats={statsCucian} />
-      <StatWrapper statTitle="Pelanggan" stats={statsCustomer} />
+      <div className='p-4 bg-base-300 rounded'>
+        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4'>
+          <Stat
+            btnText='Lihat'
+            link='/customers'
+            title='Total customer'
+            value={isLoading ? <Loading /> : totalCustomer}
+          />
+        </div>
+      </div>
     </div>
   );
 };

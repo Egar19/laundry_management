@@ -9,6 +9,7 @@ import CustomersPage from './pages/CustomersPage';
 import ExpensesPage from './pages/ExpensesPage';
 import ReportsPage from './pages/ReportsPage';
 import HomePage from './pages/HomePage';
+import PackageSettingsPage from './pages/PackageSettingsPage';
 
 function App() {
   return (
@@ -62,6 +63,16 @@ function App() {
           <ProtectedRoute>
             <MainLayout>
               <ReportsPage />
+            </MainLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/package_settings"
+        element={
+          <ProtectedRoute>
+            <MainLayout>
+              <PackageSettingsPage />
             </MainLayout>
           </ProtectedRoute>
         }

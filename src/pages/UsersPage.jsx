@@ -108,7 +108,7 @@ const UsersPage = () => {
   const isSubmitting = addUserIsPending || updateUserIsPending;
 
   return (
-    <div className='overflow-x-auto'>
+    <div className='p-4'>
       {usersError && (
         <Toast message={usersError.message} variant='error' duration={5000} />
       )}
@@ -212,53 +212,54 @@ const UsersPage = () => {
           + Tambah Pengguna Baru
         </button>
       </div>
-
-      <table className='table w-full'>
-        <thead>
-          <tr>
-            <th>Nama</th>
-            <th>Email</th>
-            <th>Peran</th>
-            <th>Status Akun</th>
-            <th>Aksi</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users?.map((user) => (
-            <tr key={user.id_pengguna}>
-              <td>{user.nama}</td>
-              <td>{user.email}</td>
-              <td>{user.peran}</td>
-              <td>
-                <span
-                  className={`badge ${
-                    user.aktif ? 'text-success' : 'text-error'
-                  }`}
-                >
-                  {user.aktif ? 'Aktif' : 'Tidak Aktif'}
-                </span>
-              </td>
-              <td className='flex gap-2'>
-                <button
-                  onClick={() => handleEditOpenModal(user)}
-                  className='btn btn-sm btn-warning'
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleToggle(user)}
-                  className={`btn btn-sm ${
-                    user.aktif ? 'btn-error' : 'btn-success'
-                  }`}
-                  disabled={toggleIsPending}
-                >
-                  {user.aktif ? 'Nonaktifkan' : 'Aktifkan'}
-                </button>
-              </td>
+      <div className='overflow-x-auto'>
+        <table className='table w-full'>
+          <thead>
+            <tr>
+              <th>Nama</th>
+              <th>Email</th>
+              <th>Peran</th>
+              <th>Status Akun</th>
+              <th>Aksi</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {users?.map((user) => (
+              <tr key={user.id_pengguna}>
+                <td>{user.nama}</td>
+                <td>{user.email}</td>
+                <td>{user.peran}</td>
+                <td>
+                  <span
+                    className={`badge ${
+                      user.aktif ? 'text-success' : 'text-error'
+                    }`}
+                  >
+                    {user.aktif ? 'Aktif' : 'Tidak Aktif'}
+                  </span>
+                </td>
+                <td className='flex gap-2'>
+                  <button
+                    onClick={() => handleEditOpenModal(user)}
+                    className='btn btn-sm btn-warning'
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleToggle(user)}
+                    className={`btn btn-sm ${
+                      user.aktif ? 'btn-error' : 'btn-success'
+                    }`}
+                    disabled={toggleIsPending}
+                  >
+                    {user.aktif ? 'Nonaktifkan' : 'Aktifkan'}
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
