@@ -175,6 +175,17 @@ const getCurrentUser = async () => {
 // AUTH END
 
 // PELANGGAN START
+const getCustomers = async () => {
+  const { data, error } = await supabase
+    .from('pelanggan')
+    .select('*')
+    .order('tanggal_dibuat', { ascending: false });
+
+  if (error) throw error;
+
+  return data;
+};
+
 const getAllCustomer = async ({ page = 1, limit = 5, search = '' }) => {
   const from = (page - 1) * limit;
   const to = from + limit - 1;
@@ -312,13 +323,105 @@ const deleteExpense = async (id_pengeluaran) => {
 //PENGELUARAN END
 
 //TRANSAKSI START
-const getAllTransaction = async () => {
-  const { data, error } = await supabase.from('transaksi').select('*');
+const getAllTransactions = async ({
+  page = 1,
+  limit = 5,
+  search = '',
+  status = 'semua',
+}) => {
+  const offset = (page - 1) * limit;
+
+  let query = supabase
+    .from('transaksi_cucian')
+    .select(
+      `
+      id_transaksi,
+      id_pelanggan,
+      id_jenis_paket,
+      tanggal_masuk,
+      tanggal_selesai,
+      total_biaya,
+      status_cucian,
+      berat_cucian,
+      pelanggan:pelanggan(id_pelanggan, nama_pelanggan),
+      jenis_paket:jenis_paket(id_jenis_paket, nama_paket)
+    `,
+      { count: 'exact' }
+    )
+    .order('tanggal_masuk', { ascending: false })
+    .range(offset, offset + limit - 1);
+
+  if (status && status !== 'semua') {
+    query = query.eq('status_cucian', status);
+  }
+
+  if (search) {
+    query = query.or(`status_cucian.ilike.%${search}%,id_transaksi.ilike.%${search}%`);
+  }
+
+  const { data, error, count } = await query;
+  if (error) throw error;
+
+  return { data, count };
+};
+
+
+const addTransaction = async ({
+  id_pengguna,
+  id_pelanggan,
+  id_jenis_paket,
+  berat_cucian,
+  total_biaya,
+  status_cucian,
+  tanggal_selesai,
+}) => {
+  const { data, error } = await supabase
+    .from('transaksi_cucian')
+    .insert([
+      {
+        id_pengguna,
+        id_pelanggan,
+        id_jenis_paket,
+        berat_cucian,
+        total_biaya,
+        status_cucian,
+        tanggal_selesai,
+      },
+    ])
+    .select();
 
   if (error) throw error;
   return data;
 };
 
+const updateTransaction = async ({ id_transaksi, status_cucian, ...rest }) => {
+  const shouldSetTanggalSelesai =
+    status_cucian === 'selesai, belum diambil' ||
+    status_cucian === 'selesai, sudah diambil';
+
+  const { data, error } = await supabase
+    .from('transaksi_cucian')
+    .update({
+      ...rest,
+      status_cucian,
+      tanggal_selesai: shouldSetTanggalSelesai ? new Date().toISOString() : null,
+    })
+    .eq('id_transaksi', id_transaksi)
+    .select();
+
+  if (error) throw error;
+  return data;
+};
+
+
+const deleteTransaction = async (id_transaksi) => {
+  const { error } = await supabase
+    .from('transaksi_cucian')
+    .delete()
+    .eq('id_transaksi', id_transaksi);
+
+  if (error) throw error;
+};
 // TRANSAKSI END
 
 //JENIS PAKET START
@@ -332,7 +435,12 @@ const getAllPackages = async () => {
   return data;
 };
 
-const addPackage = async ({ id_pengguna, nama_paket, estimasi, harga_per_kg }) => {
+const addPackage = async ({
+  id_pengguna,
+  nama_paket,
+  estimasi,
+  harga_per_kg,
+}) => {
   const { data, error } = await supabase
     .from('jenis_paket')
     .insert([{ id_pengguna, nama_paket, estimasi, harga_per_kg }])
@@ -342,7 +450,12 @@ const addPackage = async ({ id_pengguna, nama_paket, estimasi, harga_per_kg }) =
   return data;
 };
 
-const updatePackage = async ({ id_jenis_paket, nama_paket, estimasi, harga_per_kg }) => {
+const updatePackage = async ({
+  id_jenis_paket,
+  nama_paket,
+  estimasi,
+  harga_per_kg,
+}) => {
   const { data, error } = await supabase
     .from('jenis_paket')
     .update({ nama_paket, estimasi, harga_per_kg })
@@ -361,8 +474,6 @@ const deletePackage = async (id_jenis_paket) => {
 
   if (error) throw error;
 };
-
-
 //JENIS PAKET END
 
 export {
@@ -374,6 +485,7 @@ export {
   logOutUser,
   authUser,
   getCurrentUser,
+  getCustomers,
   getAllCustomer,
   addCustomer,
   updateCustomer,
@@ -383,7 +495,10 @@ export {
   addExpense,
   updateExpense,
   deleteExpense,
-  getAllTransaction,
+  getAllTransactions,
+  addTransaction,
+  updateTransaction,
+  deleteTransaction,
   getAllPackages,
   addPackage,
   updatePackage,

@@ -14,11 +14,11 @@ import PackageSettingsPage from './pages/PackageSettingsPage';
 function App() {
   return (
     <Routes>
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/" element={<HomePage />} />
+      <Route path='/login' element={<LoginPage />} />
+      <Route path='/' element={<HomePage />} />
 
       <Route
-        path="/dashboard"
+        path='/dashboard'
         element={
           <ProtectedRoute>
             <MainLayout>
@@ -28,7 +28,7 @@ function App() {
         }
       />
       <Route
-        path="/transactions"
+        path='/transactions'
         element={
           <ProtectedRoute>
             <MainLayout>
@@ -38,7 +38,7 @@ function App() {
         }
       />
       <Route
-        path="/customers"
+        path='/customers'
         element={
           <ProtectedRoute>
             <MainLayout>
@@ -48,7 +48,7 @@ function App() {
         }
       />
       <Route
-        path="/expenses"
+        path='/expenses'
         element={
           <ProtectedRoute>
             <MainLayout>
@@ -58,7 +58,7 @@ function App() {
         }
       />
       <Route
-        path="/reports"
+        path='/reports'
         element={
           <ProtectedRoute>
             <MainLayout>
@@ -68,7 +68,7 @@ function App() {
         }
       />
       <Route
-        path="/package_settings"
+        path='/package_settings'
         element={
           <ProtectedRoute>
             <MainLayout>
@@ -78,7 +78,7 @@ function App() {
         }
       />
       <Route
-        path="/users"
+        path='/users'
         element={
           <ProtectedRoute allowedRoles={['admin']}>
             <MainLayout>
