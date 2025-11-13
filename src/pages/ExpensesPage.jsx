@@ -51,6 +51,7 @@ const ExpensesPage = () => {
   const handleAddOpenModal = () => {
     setModalType('add');
     setSelectedExpense(null);
+    reset({ deskripsi: '', biaya: '' });
     setIsModalOpen(true);
   };
 

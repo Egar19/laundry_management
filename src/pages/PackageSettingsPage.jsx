@@ -38,6 +38,11 @@ const PackageSettingsPage = () => {
   const handleAddOpenModal = () => {
     setModalType('add');
     setSelectedPackage(null);
+    reset({
+      nama_paket: '',
+      estimasi: '',
+      harga_per_kg: '',
+    })
     setIsModalOpen(true);
   };
 

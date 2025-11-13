@@ -89,6 +89,13 @@ const TransactionsPage = () => {
   const handleAddOpenModal = () => {
     setModalType('add');
     setSelectedTransaction(null);
+    reset({
+      id_pelanggan: '',
+      id_jenis_paket: '',
+      berat_cucian: '',
+      total_biaya: '',
+      status_cucian: '',
+    });
     setIsModalOpen(true);
   };
 
@@ -201,9 +208,7 @@ const TransactionsPage = () => {
       >
         <form className='flex flex-col gap-3'>
           <div className='form-control'>
-            <label className='label mb-2'>
-              Pelanggan
-            </label>
+            <label className='label mb-2'>Pelanggan</label>
             <SearchableDropdown
               label='Pilih Pelanggan'
               data={customers}
@@ -226,9 +231,7 @@ const TransactionsPage = () => {
           </div>
 
           <div className='form-control'>
-            <label className='label mb-2'>
-              Jenis Paket
-            </label>
+            <label className='label mb-2'>Jenis Paket</label>
             <SearchableDropdown
               label='Pilih Jenis Paket'
               data={packages}

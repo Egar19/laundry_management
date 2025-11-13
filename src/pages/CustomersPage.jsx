@@ -56,6 +56,11 @@ const CustomersPage = () => {
   const handleAddOpenModal = () => {
     setModalType('add');
     setSelectedCustomer(null);
+    reset({
+      nama_pelanggan: '',
+      alamat: '',
+      no_telp: '',
+    })
     setIsModalOpen(true);
   };
 
