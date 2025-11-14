@@ -10,13 +10,14 @@ import ExpensesPage from './pages/ExpensesPage';
 import ReportsPage from './pages/ReportsPage';
 import HomePage from './pages/HomePage';
 import PackageSettingsPage from './pages/PackageSettingsPage';
+import NotFoundPage from './pages/NotFoundPage';
 
 function App() {
   return (
     <Routes>
       <Route path='/login' element={<LoginPage />} />
       <Route path='/' element={<HomePage />} />
-
+      <Route path='*' element={<NotFoundPage />} />
       <Route
         path='/dashboard'
         element={
