@@ -293,18 +293,17 @@ const TransactionsPage = () => {
         </form>
       </Modal>
 
-      <div className='my-4 flex flex-wrap justify-between items-center gap-2'>
-        <button onClick={handleAddOpenModal} className='btn btn-success'>
+      <div className='my-4 grid grid-cols-1 sm:grid-cols-2 gap-3'>
+        <button onClick={handleAddOpenModal} className='btn btn-success w-fit'>
           + Tambah Transaksi
         </button>
-
-        <div className='flex gap-2 items-center'>
+        <div className='grid grid-cols-[2fr_1fr] sm:grid-cols-[2fr_1fr] gap-2'>
           <SearchBar
             placeholder='Cari transaksi...'
             onSearch={(value) => setSearchTerm(value)}
           />
           <select
-            className='select select-bordered select-sm'
+            className='select select-bordered select-md'
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
           >
