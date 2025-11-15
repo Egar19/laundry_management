@@ -175,17 +175,6 @@ const getCurrentUser = async () => {
 // AUTH END
 
 // PELANGGAN START
-const getCustomers = async () => {
-  const { data, error } = await supabase
-    .from('pelanggan')
-    .select('*')
-    .order('tanggal_dibuat', { ascending: false });
-
-  if (error) throw error;
-
-  return data;
-};
-
 const getAllCustomer = async ({ page = 1, limit = 5, search = '' }) => {
   const from = (page - 1) * limit;
   const to = from + limit - 1;
@@ -320,6 +309,15 @@ const deleteExpense = async (id_pengeluaran) => {
 
   if (error) throw error;
 };
+
+const getExpenseCount = async () => {
+  const { count, error } = await supabase
+    .from('pengeluaran')
+    .select('*', { count: 'exact', head: true });
+
+  if(error) throw error;
+  return count;
+};
 //PENGELUARAN END
 
 //TRANSAKSI START
@@ -329,42 +327,31 @@ const getAllTransactions = async ({
   search = '',
   status = 'semua',
 }) => {
-  const offset = (page - 1) * limit;
+  const skip = (page - 1) * limit;
 
-  let query = supabase
-    .from('transaksi_cucian')
-    .select(
-      `
-      id_transaksi,
-      id_pelanggan,
-      id_jenis_paket,
-      tanggal_masuk,
-      tanggal_selesai,
-      total_biaya,
-      status_cucian,
-      berat_cucian,
-      pelanggan:pelanggan(id_pelanggan, nama_pelanggan),
-      jenis_paket:jenis_paket(id_jenis_paket, nama_paket)
-    `,
-      { count: 'exact' }
-    )
-    .order('tanggal_masuk', { ascending: false })
-    .range(offset, offset + limit - 1);
+  const { data, error } = await supabase.rpc('search_transactions', {
+    search_term: search,
+    status_filter: status,
+    take: limit,
+    skip,
+  });
 
-  if (status && status !== 'semua') {
-    query = query.eq('status_cucian', status);
+  if (error) {
+    console.error('RPC error:', error);
+    throw new Error(error.message || 'Gagal memuat transaksi');
   }
 
-  if (search) {
-    query = query.or(`status_cucian.ilike.%${search}%,id_transaksi.ilike.%${search}%`);
+  if (!data) {
+    return { data: [], count: 0 };
   }
 
-  const { data, error, count } = await query;
-  if (error) throw error;
+  const totalCount = data.length > 0 ? data[0].total_count : 0;
 
-  return { data, count };
+  return {
+    data,
+    count: totalCount,
+  };
 };
-
 
 const addTransaction = async ({
   id_pengguna,
@@ -404,7 +391,9 @@ const updateTransaction = async ({ id_transaksi, status_cucian, ...rest }) => {
     .update({
       ...rest,
       status_cucian,
-      tanggal_selesai: shouldSetTanggalSelesai ? new Date().toISOString() : null,
+      tanggal_selesai: shouldSetTanggalSelesai
+        ? new Date().toISOString()
+        : null,
     })
     .eq('id_transaksi', id_transaksi)
     .select();
@@ -412,7 +401,6 @@ const updateTransaction = async ({ id_transaksi, status_cucian, ...rest }) => {
   if (error) throw error;
   return data;
 };
-
 
 const deleteTransaction = async (id_transaksi) => {
   const { error } = await supabase
@@ -485,13 +473,13 @@ export {
   logOutUser,
   authUser,
   getCurrentUser,
-  getCustomers,
   getAllCustomer,
   addCustomer,
   updateCustomer,
   deleteCustomer,
   getCustomerCount,
   getAllExpense,
+  getExpenseCount,
   addExpense,
   updateExpense,
   deleteExpense,
