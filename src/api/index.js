@@ -318,6 +318,15 @@ const getExpenseCount = async () => {
   if(error) throw error;
   return count;
 };
+
+const getExpenseMonthlyTotals = async () => {
+  const { data, error } = await supabase.rpc('get_expense_totals');
+
+  if (error) throw error;
+
+  return data?.[0] || { this_month: 0, last_month: 0 }; 
+};
+
 //PENGELUARAN END
 
 //TRANSAKSI START
@@ -410,6 +419,23 @@ const deleteTransaction = async (id_transaksi) => {
 
   if (error) throw error;
 };
+
+const getTransactionCount = async () => {
+  const { data, error } = await supabase.rpc('get_transaction_stats');
+
+  if (error) throw error;
+
+  return data[0];
+};
+
+const getTransactionMonthlyTotals = async () => {
+  const { data, error } = await supabase.rpc('get_transaction_totals');
+
+  if (error) throw error
+
+  return data?.[0] || { this_month: 0, last_month: 0 };
+}
+
 // TRANSAKSI END
 
 //JENIS PAKET START
@@ -483,10 +509,13 @@ export {
   addExpense,
   updateExpense,
   deleteExpense,
+  getExpenseMonthlyTotals,
   getAllTransactions,
   addTransaction,
   updateTransaction,
   deleteTransaction,
+  getTransactionCount,
+  getTransactionMonthlyTotals,
   getAllPackages,
   addPackage,
   updatePackage,

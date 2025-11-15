@@ -11,6 +11,7 @@ import Toast from '../components/Toast';
 import Modal from '../components/Modal';
 import Input from '../components/Input';
 import AlertConfirm from '../components/AlertConfirm';
+import { formatRupiah } from '../utils/rupiahFormat';
 
 const PackageSettingsPage = () => {
   const [selectedPackage, setSelectedPackage] = useState(null);
@@ -224,7 +225,7 @@ const PackageSettingsPage = () => {
                 <tr key={pkg.id_jenis_paket}>
                   <td>{pkg.nama_paket}</td>
                   <td>{pkg.estimasi}</td>
-                  <td>Rp {Number(pkg.harga_per_kg).toLocaleString('id-ID')}</td>
+                  <td>{formatRupiah(pkg.harga_per_kg)}</td>
                   <td>{dateFormat(pkg.tanggal_dibuat)}</td>
                   <td className='flex gap-2'>
                     <button

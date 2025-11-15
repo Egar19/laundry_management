@@ -16,6 +16,7 @@ import AlertConfirm from '../components/AlertConfirm';
 import SearchBar from '../components/SearchBar';
 import Pagination from '../components/Pagination';
 import SearchableDropdown from '../components/SearchableDropdown';
+import { formatRupiah } from '../utils/rupiahFormat';
 
 const TransactionsPage = () => {
   const [selectedTransaction, setSelectedTransaction] = useState(null);
@@ -352,7 +353,7 @@ const TransactionsPage = () => {
                   <td>{trx.pelanggan?.nama_pelanggan}</td>
                   <td>{trx.jenis_paket?.nama_paket}</td>
                   <td>{trx.berat_cucian} Kg</td>
-                  <td>Rp {Number(trx.total_biaya).toLocaleString('id-ID')}</td>
+                  <td>{formatRupiah(trx.total_biaya)}</td>
                   <td>{trx.status_cucian}</td>
                   <td>{dateFormat(trx.tanggal_masuk)}</td>
                   <td>
