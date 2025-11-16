@@ -6,6 +6,7 @@ import { useTransactionCount } from '../hooks/transactions/useTransactionCount';
 import { useGetTransactionMonthlyTotals } from '../hooks/transactions/useGetTransactionMonthlyTotals';
 import { useGetExpenseMonthlyTotals } from '../hooks/expenses/useGetExpenseMonthlyTotals';
 import { formatRupiah } from '../utils/rupiahFormat';
+import { useGetAllPackages } from '../hooks/packages/useGetAllPackages';
 
 const DashboardPage = () => {
   const { data: transactionCount, isLoading: transactionLoading } =
@@ -13,12 +14,11 @@ const DashboardPage = () => {
   const { data: customerCount, isLoading: customerLoading } =
     useCustomerCount();
   const { data: expenseCount, isLoading: expenseLoading } = useExpenseCount();
-
   const { data: transactionTotals, isLoading: transactionTotalsIsLoading } =
     useGetTransactionMonthlyTotals();
-
   const { data: expenseTotals, isLoading: expenseTotalsIsLoading } =
     useGetExpenseMonthlyTotals();
+  const { data: packages, isLoading: packagesLoading } = useGetAllPackages();
 
   return (
     <div className='flex flex-col gap-4'>
@@ -79,7 +79,7 @@ const DashboardPage = () => {
               <Stat
                 btnText='Lihat'
                 link='/transactions'
-                title='Total pemasukan dari transaksi cucian bulan lalu'
+                title='Total pemasukan dari transaksi cucian bulan ini'
                 value={
                   transactionTotalsIsLoading ? (
                     <Loading />
@@ -91,7 +91,7 @@ const DashboardPage = () => {
               <Stat
                 btnText='Lihat'
                 link='/expenses'
-                title='Total pengeluaran bulan lalu'
+                title='Total pengeluaran bulan ini'
                 value={
                   expenseTotalsIsLoading ? (
                     <Loading />
@@ -114,7 +114,7 @@ const DashboardPage = () => {
               <Stat
                 btnText='Lihat'
                 link='/transactions'
-                title='Total pemasukan dari transaksi cucian bulan ini'
+                title='Total pemasukan dari transaksi cucian bulan lalu'
                 value={
                   transactionTotalsIsLoading ? (
                     <Loading />
@@ -126,7 +126,7 @@ const DashboardPage = () => {
               <Stat
                 btnText='Lihat'
                 link='/expenses'
-                title='Total pengeluaran bulan ini'
+                title='Total pengeluaran bulan lalu'
                 value={
                   expenseTotalsIsLoading ? (
                     <Loading />
@@ -140,7 +140,7 @@ const DashboardPage = () => {
         </div>
       </div>
 
-      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4'>
+      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4'>
         <div className='space-y-4 bg-base-300 p-4 rounded'>
           <h1 className='text-2xl font-bold'>Pengeluaran</h1>
           <Stat
@@ -158,6 +158,16 @@ const DashboardPage = () => {
             link='/customers'
             title='Total pelanggan'
             value={customerLoading ? <Loading /> : customerCount}
+          />
+        </div>
+
+        <div className='space-y-4 bg-base-300 p-4 rounded sm:col-span-2 md:col-span-1'>
+          <h1 className='text-2xl font-bold'>Paket layanan</h1>
+          <Stat
+            btnText='Lihat'
+            link='/packages_settings'
+            title='Total jenis paket'
+            value={packagesLoading ? <Loading /> : packages.length}
           />
         </div>
       </div>
