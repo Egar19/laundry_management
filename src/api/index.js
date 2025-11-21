@@ -436,6 +436,38 @@ const getTransactionMonthlyTotals = async () => {
   return data?.[0] || { this_month: 0, last_month: 0 };
 }
 
+const getTransactionByPhoneNumber = async (no_telp) => {
+  if (!no_telp) return [];
+
+  const { data: customer, error: custErr } = await supabase
+    .from("pelanggan")
+    .select("id_pelanggan, nama_pelanggan")
+    .eq("no_telp", no_telp)
+    .single();
+
+  if (custErr || !customer) return [];
+
+  const { data: transaksi, error: transErr } = await supabase
+    .from("transaksi_cucian")
+    .select(`
+      id_transaksi,
+      tanggal_masuk,
+      tanggal_selesai,
+      status_cucian,
+      total_biaya,
+      berat_cucian,
+      jenis_paket:jenis_paket(id_jenis_paket, nama_paket)
+    `)
+    .eq("id_pelanggan", customer.id_pelanggan)
+    .order("tanggal_masuk", { ascending: false });
+
+  if (transErr) throw transErr;
+
+  return transaksi.map((trx) => ({
+    ...trx,
+    nama_pelanggan: customer.nama_pelanggan,
+  }));
+};
 // TRANSAKSI END
 
 //JENIS PAKET START
@@ -504,6 +536,7 @@ export {
   updateCustomer,
   deleteCustomer,
   getCustomerCount,
+  getTransactionByPhoneNumber,
   getAllExpense,
   getExpenseCount,
   addExpense,

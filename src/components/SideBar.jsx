@@ -5,6 +5,7 @@ import Loading from './Loading';
 import { useLogOut } from '../hooks/auth/useLogOut';
 import AlertConfirm from './AlertConfirm';
 import { useState } from 'react';
+import ThemeSwitcher from './ThemeSwitcher';
 
 const SideBar = () => {
   const { data: user, isLoading, error } = useCurrentUser();
@@ -14,12 +15,6 @@ const SideBar = () => {
   
   if (error) return console.log(error.message);
   if (isPending) return <Loading />;
-
-  const handleThemeChange = (e) => {
-    const selectedTheme = e.target.value;
-    document.documentElement.setAttribute('data-theme', selectedTheme);
-    localStorage.setItem('theme', selectedTheme);
-  };
 
   const handleLogOut = () => {
     logout();
@@ -119,6 +114,16 @@ const SideBar = () => {
               </NavLink>
             </li>
           )}
+          <li>
+            <NavLink
+              to='/'
+              className={({ isActive }) =>
+                isActive ? 'text-primary font-bold' : ''
+              }
+            >
+              Halaman Utama
+            </NavLink>
+          </li>
         </ul>
 
         <div className='mt-auto pt-4 border-t border-base-300'>
@@ -138,14 +143,7 @@ const SideBar = () => {
               </button>
             </div>
           </div>
-          <select
-            className='select select-bordered w-full mt-2'
-            defaultValue={savedTheme}
-            onChange={handleThemeChange}
-          >
-            <option value='light'>Tema: Terang</option>
-            <option value='dark'>Tema: Gelap</option>
-          </select>
+          <ThemeSwitcher />
         </div>
       </div>
     </div>
