@@ -19,7 +19,7 @@ const HomePage = () => {
   };
 
   return (
-    <div className='min-h-screen flex flex-col bg-base-200'>
+    <div className='min-h-screen flex flex-col bg-base-200 overflow-x-hidden'>
       <nav className='navbar bg-base-100 shadow-sm px-6 sticky top-0 z-20'>
         <div className='flex-1'>
           <a className='text-2xl font-bold text-primary'>Yehning Laundry</a>
@@ -36,7 +36,7 @@ const HomePage = () => {
 
       <section className='hero py-16 bg-base-100'>
         <div className='hero-content flex-col lg:flex-row'>
-          <img src={logo} className='max-w-sm rounded-xl shadow-xl' />
+          <img src={logo} className='w-full max-w-xs rounded-xl shadow-xl mx-auto' />
 
           <div className='lg:ml-10 text-center lg:text-left'>
             <h1 className='text-4xl font-bold text-primary leading-snug'>
