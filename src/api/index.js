@@ -327,6 +327,15 @@ const getExpenseMonthlyTotals = async () => {
   return data?.[0] || { this_month: 0, last_month: 0 }; 
 };
 
+const getExportExpenses = async (mulai, sampai) => {
+  const { data, error } = await supabase.rpc("export_pengeluaran", {
+    mulai,
+    sampai,
+  });
+
+  if (error) throw error;
+  return data;
+};
 //PENGELUARAN END
 
 //TRANSAKSI START
@@ -468,6 +477,16 @@ const getTransactionByPhoneNumber = async (no_telp) => {
     nama_pelanggan: customer.nama_pelanggan,
   }));
 };
+
+const getExportTransactions = async (mulai, sampai) => {
+  const { data, error } = await supabase.rpc("export_transaksi", {
+    mulai,
+    sampai,
+  });
+
+  if (error) throw error;
+  return data;
+};
 // TRANSAKSI END
 
 //JENIS PAKET START
@@ -543,12 +562,14 @@ export {
   updateExpense,
   deleteExpense,
   getExpenseMonthlyTotals,
+  getExportExpenses,
   getAllTransactions,
   addTransaction,
   updateTransaction,
   deleteTransaction,
   getTransactionCount,
   getTransactionMonthlyTotals,
+  getExportTransactions,
   getAllPackages,
   addPackage,
   updatePackage,

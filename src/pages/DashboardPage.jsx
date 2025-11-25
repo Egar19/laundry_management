@@ -100,6 +100,18 @@ const DashboardPage = () => {
                   )
                 }
               />
+              <Stat
+                btnText='Lihat'
+                link='/expenses'
+                title='Selisih pemasukan dan pengeluaran bulan ini'
+                value={
+                  transactionTotalsIsLoading || expenseTotalsIsLoading ? (
+                    <Loading />
+                  ) : (
+                    formatRupiah(transactionTotals.this_month - expenseTotals.this_month)
+                  )
+                }
+              />
             </div>
           </div>
 
@@ -132,6 +144,18 @@ const DashboardPage = () => {
                     <Loading />
                   ) : (
                     formatRupiah(expenseTotals.last_month)
+                  )
+                }
+              />
+              <Stat
+                btnText='Lihat'
+                link='/expenses'
+                title='Selisih pemasukan dan pengeluaran bulan lalu'
+                value={
+                  transactionTotalsIsLoading || expenseTotalsIsLoading ? (
+                    <Loading />
+                  ) : (
+                    formatRupiah(transactionTotals.last_month - expenseTotals.last_month)
                   )
                 }
               />

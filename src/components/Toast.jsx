@@ -6,6 +6,7 @@ const Toast = ({ message, variant = 'success', duration = 3000, onClose }) => {
   const varian = {
     success: 'alert-success',
     error: 'alert-error',
+    warning: 'alert-warning',
   };
 
   useEffect(() => {
