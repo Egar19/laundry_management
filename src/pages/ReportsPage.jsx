@@ -49,7 +49,7 @@ const ReportsPage = () => {
     }
 
     if (trxData) {
-      exportToExcel(trxData, 'Laporan_Transaksi');
+      exportToExcel(trxData, `Laporan_Transaksi ${trxMulai} s.d ${trxSampai}`);
       setShowToast({
         message: 'Berhasil export laporan transaksi!',
         variant: 'success',
@@ -80,7 +80,7 @@ const ReportsPage = () => {
     }
 
     if (expData) {
-      exportToExcel(expData, 'Laporan_Pengeluaran');
+      exportToExcel(expData, `Laporan_Pengeluaran ${expMulai} s.d ${expSampai}`);
       setShowToast({
         message: 'Berhasil export laporan pengeluaran!',
         variant: 'success',
