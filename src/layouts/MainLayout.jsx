@@ -11,7 +11,7 @@ const MainLayout = ({ children }) => {
     '/customers': 'Pelanggan',
     '/expenses': 'Pengeluaran',
     '/reports': 'Laporan',
-    '/users': 'List pengguna',
+    '/users': 'Daftar pengguna',
     '/package_settings': 'Pengaturan paket',
   };
 

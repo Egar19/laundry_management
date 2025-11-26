@@ -110,7 +110,7 @@ const SideBar = () => {
                   isActive ? 'text-primary font-bold' : ''
                 }
               >
-                List Pengguna
+                Daftar Pengguna
               </NavLink>
             </li>
           )}
