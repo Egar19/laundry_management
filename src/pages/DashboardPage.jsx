@@ -75,7 +75,7 @@ const DashboardPage = () => {
             defaultChecked
           />
           <div className='tab-content'>
-            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4'>
+            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4'>
               <Stat
                 btnText='Lihat'
                 link='/transactions'
@@ -122,7 +122,7 @@ const DashboardPage = () => {
             aria-label='Satu Bulan Yang Lalu'
           />
           <div className='tab-content'>
-            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4'>
+            <div className='grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4'>
               <Stat
                 btnText='Lihat'
                 link='/transactions'
