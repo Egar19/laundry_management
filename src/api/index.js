@@ -10,40 +10,23 @@ const getAllUsers = async () => {
   return data;
 };
 
-const addUser = async ({ email, password, nama, peran }) => {
+const addUser = async ({ email, password, nama, peran, supabase }) => {
   if (!email || !password || !nama || !peran) {
     throw new Error('Semua field wajib diisi.');
   }
 
-  const { data: existingUser, error: existingError } = await supabase
-    .from('pengguna')
-    .select('id_pengguna')
-    .eq('email', email)
-    .maybeSingle();
-
-  if (existingError)
-    throw new Error('Gagal memeriksa email di tabel pengguna.');
-  if (existingUser) throw new Error('Email sudah terdaftar di tabel pengguna.');
-
-  const { data: authListData, error: authListError } =
-    await supabasee.auth.admin.listUsers();
-
-  if (authListError) throw new Error('Gagal memeriksa email di Supabase Auth.');
-
-  const emailExistsInAuth = authListData.users.some((u) => u.email === email);
-  if (emailExistsInAuth)
-    throw new Error('Email sudah terdaftar di Supabase Auth.');
-
-  const { data: authData, error: authError } =
-    await supabasee.auth.admin.createUser({
+  const { data: authData, error: authError } = await supabasee.auth.admin.createUser({
       email,
-      password,
       email_confirm: true,
+      password,
       user_metadata: { nama, peran },
-    });
-  if (authError) throw new Error(authError.message);
+  });
+  
+  if (authError) {
+      throw new Error(authError.message); 
+  }
 
-  const { error: penggunaError } = await supabase
+  const { error: penggunaError } = await supabasee
     .from('pengguna')
     .upsert({
       id_pengguna: authData.user.id,
@@ -55,10 +38,16 @@ const addUser = async ({ email, password, nama, peran }) => {
     .select()
     .single();
 
-  if (penggunaError) throw new Error('Gagal menambahkan data pengguna.');
+  if (penggunaError) {
+      await supabase.auth.admin.deleteUser(authData.user.id);
+      throw new Error('Gagal menambahkan data pengguna ke tabel database. Pengguna Auth dibatalkan.');
+  }
 
+  console.log(authData.user);
+  
   return authData.user;
 };
+
 
 const updateUser = async (id_pengguna, { nama, peran }) => {
   const { data, error } = await supabase
