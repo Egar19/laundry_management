@@ -189,7 +189,7 @@ const DashboardPage = () => {
           <h1 className='text-2xl font-bold'>Paket layanan</h1>
           <Stat
             btnText='Lihat'
-            link='/packages_settings'
+            link='/package_settings'
             title='Total jenis paket'
             value={packagesLoading ? <Loading /> : packages.length}
           />
