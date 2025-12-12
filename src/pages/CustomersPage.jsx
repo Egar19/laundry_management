@@ -60,7 +60,7 @@ const CustomersPage = () => {
       nama_pelanggan: '',
       alamat: '',
       no_telp: '',
-    })
+    });
     setIsModalOpen(true);
   };
 
@@ -84,6 +84,16 @@ const CustomersPage = () => {
 
   const onAddSubmit = async (data, e) => {
     e.preventDefault();
+
+    const isDuplicate = customers.some((c) => c.no_telp === data.no_telp);
+    if (isDuplicate) {
+      setShowToast({
+        message: 'Nomor telepon sudah terdaftar!',
+        variant: 'error',
+      });
+      return;
+    }
+    
     try {
       await addCustomer({
         ...data,
@@ -203,6 +213,10 @@ const CustomersPage = () => {
             placeholder='Masukkan nomor telepon/WA pelanggan'
             register={register('no_telp', {
               required: 'Mohon isi telepon/WA pelanggan!',
+              validate: (value) => {
+                const isDuplicate = customers.some((c) => c.no_telp === value);
+                return isDuplicate ? 'Nomor telepon sudah terdaftar!' : true;
+              },
             })}
             error={errors.no_telp}
           />
