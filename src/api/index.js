@@ -43,8 +43,6 @@ const addUser = async ({ email, password, nama, peran, supabase }) => {
       throw new Error('Gagal menambahkan data pengguna ke tabel database. Pengguna Auth dibatalkan.');
   }
 
-  console.log(authData.user);
-  
   return authData.user;
 };
 

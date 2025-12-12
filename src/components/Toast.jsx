@@ -21,7 +21,7 @@ const Toast = ({ message, variant = 'success', duration = 3000, onClose }) => {
   if (!visible) return null;
 
   return (
-    <div className='toast toast-top toast-center'>
+    <div className="toast toast-top toast-center fixed top-4 left-1/2 -translate-x-1/2 z-50">
       <div className={`alert ${varian[variant]}`}>
         <span>{message}</span>
       </div>

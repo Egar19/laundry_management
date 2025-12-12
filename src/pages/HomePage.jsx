@@ -5,21 +5,54 @@ import { formatRupiah } from '../utils/rupiahFormat';
 import { dateFormat } from '../utils/dateFormat';
 import logo from '../assets/logo.png';
 import { IoLogoWhatsapp } from 'react-icons/io';
+import Toast from '../components/Toast';
 
 const HomePage = () => {
   const [inputTelp, setInputTelp] = useState('');
   const [searchTelp, setSearchTelp] = useState('');
+  const [showToast, setShowToast] = useState(null);
 
   const { data: hasil, isLoading } = useGetTransactionByPhoneNumber(searchTelp);
 
   const handleCheck = (e) => {
     e.preventDefault();
-    if (!inputTelp.trim()) return;
+    if (!inputTelp.trim()) {
+      setShowToast({
+        message: 'Nomor telepon tidak boleh kosong',
+        variant: 'error',
+      });
+      return;
+    }
+
+    if (inputTelp.trim().length < 9) {
+      setShowToast({
+        message: 'Nomor telepon tidak boleh kurang dari 9',
+        variant: 'error',
+      });
+      return;
+    }
+    
+    if (inputTelp.trim().length > 11) {
+      setShowToast({
+        message: 'Nomor telepon tidak boleh lebih dari 11',
+        variant: 'error',
+      });
+      return;
+    }
+
     setSearchTelp(inputTelp.trim());
   };
 
   return (
     <div className='min-h-screen flex flex-col bg-base-200 overflow-x-hidden'>
+      {showToast && (
+        <Toast
+          message={showToast.message}
+          variant={showToast.variant}
+          duration={5000}
+          onClose={() => setShowToast(null)}
+        />
+      )}
       <nav className='navbar bg-base-100 shadow-sm px-6 sticky top-0 z-20'>
         <div className='flex-1'>
           <a className='text-2xl font-bold text-primary'>Yehning Laundry</a>
@@ -36,7 +69,10 @@ const HomePage = () => {
 
       <section className='hero py-16 bg-base-100'>
         <div className='hero-content flex-col lg:flex-row'>
-          <img src={logo} className='w-full max-w-xs rounded-xl shadow-xl mx-auto' />
+          <img
+            src={logo}
+            className='w-full max-w-xs rounded-xl shadow-xl mx-auto'
+          />
 
           <div className='lg:ml-10 text-center lg:text-left'>
             <h1 className='text-4xl font-bold text-primary leading-snug'>
@@ -63,10 +99,12 @@ const HomePage = () => {
           <form onSubmit={handleCheck} className='flex flex-col gap-4'>
             <input
               type='text'
+              inputMode='numeric'
+              pattern="[0-9]*"
               placeholder='Masukkan nomor telepon'
               className='input input-bordered w-full'
               value={inputTelp}
-              onChange={(e) => setInputTelp(e.target.value)}
+              onChange={(e) => setInputTelp(e.target.value.replace(/\D/g, ''))}
             />
 
             <button className='btn btn-primary w-full'>Cek Sekarang</button>
