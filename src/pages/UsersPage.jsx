@@ -22,7 +22,7 @@ const UsersPage = () => {
     useUpdateUser();
   const { mutate: toggleUser, isPending: toggleIsPending } =
     useToggleDeactivateUser();
-
+  
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedToggleUser, setSelectedToggleUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -250,7 +250,7 @@ const UsersPage = () => {
                     className={`btn btn-sm ${
                       user.aktif ? 'btn-error' : 'btn-success'
                     }`}
-                    disabled={toggleIsPending}
+                    disabled={toggleIsPending || user.peran == 'admin'}
                   >
                     {user.aktif ? 'Nonaktifkan' : 'Aktifkan'}
                   </button>
