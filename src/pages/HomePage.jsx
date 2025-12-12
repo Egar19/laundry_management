@@ -32,9 +32,9 @@ const HomePage = () => {
       return;
     }
     
-    if (inputTelp.trim().length > 11) {
+    if (inputTelp.trim().length > 13) {
       setShowToast({
-        message: 'Nomor telepon tidak boleh lebih dari 11',
+        message: 'Nomor telepon tidak boleh lebih dari 12',
         variant: 'error',
       });
       return;
