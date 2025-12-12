@@ -10,6 +10,7 @@ const SearchableDropdown = ({
   onSelect = () => {},
   addButtonText = "Tambah Data",
   addButtonLink = "/",
+  renderItem = null,
 }) => {
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -19,7 +20,12 @@ const SearchableDropdown = ({
     query === ""
       ? data
       : data.filter((item) =>
-          item[displayKey].toLowerCase().includes(query.toLowerCase())
+          (renderItem
+            ? renderItem(item)
+            : item[displayKey]
+          )
+            .toLowerCase()
+            .includes(query.toLowerCase())
         );
 
   const handleSelect = (item) => {
@@ -28,14 +34,19 @@ const SearchableDropdown = ({
     setIsOpen(false);
   };
 
+  const getLabel = (item) => {
+    return renderItem ? renderItem(item) : item[displayKey];
+  };
+
   return (
     <div className="relative w-full">
+      {/* Button main */}
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
         className="btn w-full justify-between"
       >
-        {selectedItem ? selectedItem[displayKey] : label}
+        {selectedItem ? getLabel(selectedItem) : label}
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className={`h-5 w-5 ml-2 transition-transform ${
@@ -54,6 +65,7 @@ const SearchableDropdown = ({
 
       {isOpen && (
         <div className="absolute top-full mt-2 w-full p-2 shadow bg-base-200 rounded-box z-50">
+          {/* Input Search */}
           <input
             type="text"
             placeholder="Cari..."
@@ -62,6 +74,7 @@ const SearchableDropdown = ({
             onChange={(e) => setQuery(e.target.value)}
           />
 
+          {/* List */}
           <ul className="max-h-48 overflow-y-auto">
             {filteredData.length > 0 ? (
               filteredData.map((item) => (
@@ -75,7 +88,7 @@ const SearchableDropdown = ({
                     }`}
                     onClick={() => handleSelect(item)}
                   >
-                    {item[displayKey]}
+                    {getLabel(item)}
                   </button>
                 </li>
               ))
@@ -84,6 +97,7 @@ const SearchableDropdown = ({
             )}
           </ul>
 
+          {/* Add Button */}
           <button
             type="button"
             className="btn btn-primary mt-2 w-full"

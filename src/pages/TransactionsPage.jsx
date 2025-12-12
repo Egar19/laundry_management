@@ -223,7 +223,9 @@ const TransactionsPage = () => {
               onSelect={(item) => setValue('id_pelanggan', item.id_pelanggan)}
               addButtonText='Tambah Pelanggan'
               addButtonLink='/customers'
+              renderItem={(item) => `${item.nama_pelanggan} - ${item.no_telp}`}
             />
+
             {errors.id_pelanggan && (
               <span className='text-error text-sm'>
                 {errors.id_pelanggan.message}
