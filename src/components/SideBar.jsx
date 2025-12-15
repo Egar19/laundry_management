@@ -38,10 +38,10 @@ const SideBar = () => {
 
       <div className='flex flex-col bg-base-200 min-h-screen w-64 p-4'>
         <Link to='/'>
-          <img className='w-12 rounded-full mb-4' src={logo} alt='logo' />
+          <img className='w-18 rounded-full ml-4' src={logo} alt='logo' />
         </Link>
 
-        <ul className='menu  flex-1'>
+        <ul className='menu flex-1'>
           <li>
             <NavLink
               to='/dashboard'

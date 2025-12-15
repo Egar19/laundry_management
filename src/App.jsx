@@ -11,11 +11,19 @@ import ReportsPage from './pages/ReportsPage';
 import HomePage from './pages/HomePage';
 import PackageSettingsPage from './pages/PackageSettingsPage';
 import NotFoundPage from './pages/NotFoundPage';
+import PublicRoute from './components/PublicRoute';
 
 function App() {
   return (
     <Routes>
-      <Route path='/login' element={<LoginPage />} />
+      <Route
+        path='/login'
+        element={
+          <PublicRoute>
+            <LoginPage />
+          </PublicRoute>
+        }
+      />
       <Route path='/' element={<HomePage />} />
       <Route path='*' element={<NotFoundPage />} />
       <Route
