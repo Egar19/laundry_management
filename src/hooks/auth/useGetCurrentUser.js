@@ -3,7 +3,7 @@ import { getCurrentUser } from '../../api';
 
 export const useCurrentUser = () => {
   return useQuery({
-    queryKey: ['currentUser'],
+    queryKey: ['current-user'],
     queryFn: getCurrentUser,
     refetchOnWindowFocus: false,
   });
